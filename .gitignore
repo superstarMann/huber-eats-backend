@@ -10,6 +10,11 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# dotev environment variables file
+.env
+.env.test
+.env.dev
+
 # OS
 .DS_Store
 
