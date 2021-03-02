@@ -4,6 +4,7 @@ import {GraphQLModule} from '@nestjs/graphql';
 import { StoresModule } from './stores/stores.module';
 import { TypeOrmModule} from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { Store } from './stores/entities/store.entity';
 
 console.log(Joi);
 
@@ -29,8 +30,9 @@ console.log(Joi);
     username:process.env.DB_USERNAME,
     password:process.env.DB_PASSWORD,
     database:process.env.DB_DATABAS,
-    synchronize: true,
-    logging: true,
+    synchronize: process.env.NODE_ENV !== 'prod',
+    logging: process.env.NODE_ENV !== 'prod',
+    entities: [Store],
     }),
   GraphQLModule.forRoot({
     autoSchemaFile: true,
