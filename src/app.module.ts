@@ -4,7 +4,9 @@ import {GraphQLModule} from '@nestjs/graphql';
 import { StoresModule } from './stores/stores.module';
 import { TypeOrmModule} from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Store } from './stores/entities/store.entity';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
+import { User } from './users/entities/user.entity';
 
 console.log(Joi);
 
@@ -32,12 +34,13 @@ console.log(Joi);
     database:process.env.DB_DATABAS,
     synchronize: process.env.NODE_ENV !== 'prod',
     logging: process.env.NODE_ENV !== 'prod',
-    entities: [Store],
+    entities: [User],
     }),
   GraphQLModule.forRoot({
     autoSchemaFile: true,
   }),
-  StoresModule, 
+  UsersModule,
+  CommonModule, 
 ],
   controllers: [],
   providers: [],
