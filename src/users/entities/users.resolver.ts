@@ -6,6 +6,7 @@ import { CreateAccountInput, CreateAccountOutput } from '../dtos/create-account.
 import { EditProfileInput, EditProfileOutput } from '../dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from '../dtos/login.dto';
 import { UserProfileInput, UserProfileOutput } from '../dtos/user-profile.dto';
+import { VerifyEmailInput, VerifyEmailOutput } from '../dtos/verify-email.dto';
 import { User } from "./user.entity";
 import { UsersService } from "./users.service";
 
@@ -82,6 +83,20 @@ export  class UsersResolver {
         }catch(error){
             return{
                 ok: false,
+                error
+            }
+        }
+    }
+    @Mutation(() => VerifyEmailOutput)
+    async verifyEmail(@Args('input') {code}: VerifyEmailInput): Promise<VerifyEmailOutput>{
+        try{
+            this.usersService.verifyEmail(code); 
+            return{
+                ok: true
+            }
+        }catch(error){
+            return{
+                ok:false,
                 error
             }
         }
