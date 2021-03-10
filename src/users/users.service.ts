@@ -105,7 +105,7 @@ export class UserService {
     }
     if (password) {
       user.password = password;
-    }
+    } 
     return this.users.save(user);
   }
 
