@@ -26,7 +26,7 @@ export class MailService {
                 method:'POST',
                 headers:{
                     "Authorization": `Basic ${Buffer.from(`api:${this.options.apiKey}`).toString("base64")}`
-                },
+                }, 
                 body:form,
             }
         );

@@ -15,7 +15,7 @@ export class Verification extends CoreEntity {
   @OneToOne(type => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
-
+ 
     @BeforeInsert()
     createCode():void{
         this.code = uuidv4(); 

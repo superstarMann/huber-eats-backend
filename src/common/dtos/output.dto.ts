@@ -7,4 +7,4 @@ export class CoreOutput {
 
   @Field(type => Boolean)
   ok: boolean;
-}
+} 

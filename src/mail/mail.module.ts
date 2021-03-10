@@ -11,7 +11,7 @@ export class MailModule {
       module: MailModule,
       providers: [
         {
-          provide: CONFIG_OPTIONS,
+          provide: CONFIG_OPTIONS, 
           useValue: options,
         },
         MailService,

@@ -12,7 +12,7 @@ export class JwtModule {
       providers: [
         {
           provide: CONFIG_OPTIONS,
-          useValue: options,
+          useValue: options, 
         },
         JwtService,
       ],

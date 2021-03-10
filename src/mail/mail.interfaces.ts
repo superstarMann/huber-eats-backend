@@ -7,4 +7,4 @@ export interface MailModuleOptions {
 export interface EmailVar {
   key: string;
   value: string;
-}
+} 

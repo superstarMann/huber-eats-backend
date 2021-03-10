@@ -99,7 +99,7 @@ export class UserService {
       user.email = email;
       user.verified = false;
       const verification = await this.verifications.save(
-          this.verifications.create({ user }),
+          this.verifications.create({ user }), 
         );
         this.mailService.sendVerificationEmail(user.email, verification.code);
     }
@@ -107,7 +107,7 @@ export class UserService {
       user.password = password;
     } 
     return this.users.save(user);
-  }
+  } 
 
   async verifyEmail(code: string): Promise<boolean> {
     try {
