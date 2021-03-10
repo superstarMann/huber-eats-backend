@@ -3,20 +3,20 @@ import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { JwtModuleOptions } from './jwt.interfaces';
 import { JwtService } from './jwt.service';
 
-@Module({})
+Module({})
 @Global()
 export class JwtModule {
-    static forRoot(options: JwtModuleOptions) : DynamicModule{
-        return{
-            module: JwtModule,
-            exports: [JwtService],
-            providers: [
-                {
-                provide: CONFIG_OPTIONS,
-                useValue: options                
-            },
-            JwtService,
-        ]
-        };
-    }
+  static forRoot(options: JwtModuleOptions): DynamicModule {
+    return {
+      module: JwtModule,
+      providers: [
+        {
+          provide: CONFIG_OPTIONS,
+          useValue: options,
+        },
+        JwtService,
+      ],
+      exports: [JwtService],
+    };
+  }
 }
