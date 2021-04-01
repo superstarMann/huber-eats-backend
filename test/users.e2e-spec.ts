@@ -4,11 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { getConnection } from 'typeorm';
 
-jest.mock('got', () => {
-  return {
-    post: jest.fn(),
-  };
-});
+jest.mock('got');
 
 const GRAPHQL_ENDPOINT = '/grqphql'
 

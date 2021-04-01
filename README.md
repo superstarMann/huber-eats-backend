@@ -17,3 +17,9 @@ The Backend of Nuber Eats Clone
 - See Profile
 - Edit Profile
 - Verify Email
+
+## Restaurant Module
+- name
+- category
+- address
+- coverImage
