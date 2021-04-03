@@ -22,7 +22,7 @@ export class Store extends CoreEntity {
     @IsString()
     coverImg: string;
     
-    @Field(()=> String, {defaultValue: '용인'})
+    @Field(()=> String)
     @Column()
     @IsString()
     adress: string;
