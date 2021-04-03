@@ -17,6 +17,7 @@ import { MailModule } from './mail/mail.module';
 import { Store } from './stores/entities/store.entity';
 import { Category } from './stores/entities/category.entity';
 import { StoresModule } from './stores/stores.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -63,7 +64,8 @@ import { StoresModule } from './stores/stores.module';
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }), 
     UsersModule,
-    StoresModule
+    StoresModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
