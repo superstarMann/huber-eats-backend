@@ -1,22 +1,30 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
-import { Repository } from "typeorm";
+import { Like, Raw, Repository } from "typeorm";
 import { AllCategoriesOutput } from "./dtos/all-categories.dto";
 import { CategoryInput, CategoryOutput } from "./dtos/category.dto";
+import { CreateDishInput, CreateDishOutput } from "./dtos/create-dish.dto";
 import { CreateStoreInput, CreateStoreOutput } from "./dtos/create-store.dto";
 import { DeleteStoreInput, DeleteStoreOutput } from "./dtos/delete-store.dto";
 import { EditStoreInput, EditStoreOutput } from "./dtos/edit-store.dto";
+import { SearchStoreInput, SearchStoreOutput } from "./dtos/search-store.dto";
+import { StoreInput, StoreOutput } from "./dtos/store.dto";
 import { StoresInput, StoresOutput } from "./dtos/stores.dto";
 import { Category } from "./entities/category.entity";
+import { Dish } from "./entities/dish.entity";
 import { Store } from "./entities/store.entity";
 import { CategoryRepository } from "./repositories/category.repository";
 
 @Injectable()
 export class StoreService{
     constructor(
-    @InjectRepository(Store) private readonly stores: Repository<Store>,
-    private readonly categories: CategoryRepository) {}
+    @InjectRepository(Store) 
+    private readonly stores: Repository<Store>,
+    @InjectRepository(Dish)
+    private readonly dishes: Repository<Dish>,
+    private readonly categories: CategoryRepository,
+    ) {}
 
 
     async getOrCreate(name: string): Promise<Category>{
@@ -173,4 +181,85 @@ export class StoreService{
           }
       }
 
+
+      async findStoreById({
+        storeId,
+      }: StoreInput): Promise<StoreOutput> {
+        try {
+          const store = await this.stores.findOne(storeId, {relations: ['menu']});
+          if (!Store) {
+            return {
+              ok: false,
+              error: 'Store not found',
+            };
+          }
+          return {
+            ok: true,
+            store,
+          };
+        } catch {
+          return {
+            ok: false,
+            error: 'Could not find Store',
+          };
+        }
+      }
+
+      async searchStoreByName({query, page}: SearchStoreInput): Promise<SearchStoreOutput>{
+          try{
+              const [stores, totalResults]  = await this.stores.findAndCount({
+                  where: {
+                    name: Raw(name => `${name} ILIKE '%${query}%'`),
+                  },
+                  take: 25, 
+                  skip: (page - 1) *25
+              });
+              return{
+                  ok:true,
+                  stores,
+                  totalResults,
+                  totalPages: Math.ceil(totalResults / 25),
+              }
+          }catch(error){
+              return{
+                  ok:false,
+                  error:'Could not search for stores'
+              }
+          }
+      }
+
+      async createDish(
+        owner: User,
+        createDishInput: CreateDishInput,
+      ): Promise<CreateDishOutput> {
+        try {
+          const store = await this.stores.findOne(
+            createDishInput.storeId,
+          );
+          if (!store) {
+            return {
+              ok: false,
+              error: 'Store not found',
+            };
+          }
+          if (owner.id !== store.ownerId) {
+            return {
+              ok: false,
+              error: "You can't do that.",
+            };
+          }
+          await this.dishes.save(
+            this.dishes.create({ ...createDishInput, store}),
+          );
+          return {
+            ok: true,
+          };
+        } catch (error) {
+          console.log(error);
+          return {
+            ok: false,
+            error: 'Could not create dish',
+          };
+        }
+      }
     }

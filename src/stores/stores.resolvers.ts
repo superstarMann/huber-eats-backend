@@ -8,9 +8,13 @@ import { CreateStoreInput, CreateStoreOutput } from './dtos/create-store.dto';
 import { DeleteStoreInput, DeleteStoreOutput } from './dtos/delete-store.dto';
 import { EditStoreInput, EditStoreOutput } from './dtos/edit-store.dto';
 import { StoresInput, StoresOutput } from './dtos/stores.dto';
+import { StoreInput, StoreOutput } from './dtos/store.dto'
 import { Category } from './entities/category.entity';
 import { Store } from './entities/store.entity';
 import { StoreService } from './stores.service';
+import { SearchStoreInput, SearchStoreOutput } from './dtos/search-store.dto';
+import { Dish } from './entities/dish.entity';
+import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
 
 
 @Resolver(()=> Store)
@@ -48,7 +52,19 @@ export class StoreResolver{
       stores(@Args('input') storesInput: StoresInput): Promise<StoresOutput>{
         return this.storeService.allstores(storesInput);
       }
-    }
+
+      @Query(returns => StoreOutput)
+      store(
+        @Args('input') storeInput: StoreInput,
+      ): Promise<StoreOutput> {
+        return this.storeService.findStoreById(storeInput);
+      }
+    
+      @Query(() => SearchStoreOutput)
+      searchStore(@Args('input') searchStoreInput: SearchStoreInput): Promise<SearchStoreOutput>{
+        return this.storeService.searchStoreByName(searchStoreInput)}
+      
+}
     
     @Resolver(of => Category)
     export class CategoryResolver {
@@ -69,6 +85,16 @@ export class StoreResolver{
        return this.storeService.findCategoryBySlug(categoryInput)
       }
 
-      
-    }
+ }
     
+ @Resolver(() => Dish)
+ export class DishResolver{
+   constructor(private readonly storeService: StoreService){}
+
+   @Mutation(() => CreateDishOutput)
+   @Role(["Owner"])
+   createDish(@AuthUser() owner: User, @Args('input') createDishInput: CreateDishInput): Promise<CreateDishOutput>{
+     return this.storeService.createDish(owner, createDishInput)
+   }
+
+}
