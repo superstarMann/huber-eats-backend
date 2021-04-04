@@ -3,9 +3,11 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { AllCategoriesOutput } from "./dtos/all-categories.dto";
+import { CategoryInput, CategoryOutput } from "./dtos/category.dto";
 import { CreateStoreInput, CreateStoreOutput } from "./dtos/create-store.dto";
 import { DeleteStoreInput, DeleteStoreOutput } from "./dtos/delete-store.dto";
 import { EditStoreInput, EditStoreOutput } from "./dtos/edit-store.dto";
+import { StoresInput, StoresOutput } from "./dtos/stores.dto";
 import { Category } from "./entities/category.entity";
 import { Store } from "./entities/store.entity";
 import { CategoryRepository } from "./repositories/category.repository";
@@ -124,4 +126,51 @@ export class StoreService{
           };
         }
       }
+
+      countStores(category: Category){
+          return this.stores.count({category});
+      }
+
+      async findCategoryBySlug({slug, page}: CategoryInput): Promise<CategoryOutput>{
+          try{
+              const category = await this.categories.findOne({slug}, {relations: ['stores']});
+              if(!category){
+                  return{
+                      ok:false,
+                      error: "Category not found",
+                  };
+                }
+                const stores = await this.stores.find({where: {category}, take: 25, skip: (page - 1)*25, });
+                category.stores = stores;
+                const totalResults = await this.countStores(category)
+                return{
+                        ok: true,
+                        category,
+                        totalPages: Math.ceil(totalResults / 25)
+                }
+          }catch(error){
+              return{
+                  ok: false,
+                  error: "Could not load category"
+              }
+          }
+      }
+
+      async allstores({page} : StoresInput): Promise<StoresOutput>{
+          try{
+              const [results, totalResults] = await this.stores.findAndCount({skip:(page - 1 )*25 , take: 25});
+              return{
+                  ok:true,
+                  results,
+                  totalPages: Math.ceil(totalResults / 25),
+                                 
+              };
+          }catch{
+              return{
+                  ok:false,
+                  error: 'Could not load Stores'
+              }
+          }
+      }
+
     }
