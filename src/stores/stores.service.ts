@@ -6,7 +6,9 @@ import { AllCategoriesOutput } from "./dtos/all-categories.dto";
 import { CategoryInput, CategoryOutput } from "./dtos/category.dto";
 import { CreateDishInput, CreateDishOutput } from "./dtos/create-dish.dto";
 import { CreateStoreInput, CreateStoreOutput } from "./dtos/create-store.dto";
+import { DeleteDishInput, DeleteDishOutput } from "./dtos/delete-dish.dto";
 import { DeleteStoreInput, DeleteStoreOutput } from "./dtos/delete-store.dto";
+import { EditDishInput, EditDishOutput } from "./dtos/edit-dish.dto";
 import { EditStoreInput, EditStoreOutput } from "./dtos/edit-store.dto";
 import { SearchStoreInput, SearchStoreOutput } from "./dtos/search-store.dto";
 import { StoreInput, StoreOutput } from "./dtos/store.dto";
@@ -249,7 +251,7 @@ export class StoreService{
             };
           }
           await this.dishes.save(
-            this.dishes.create({ ...createDishInput, store}),
+            this.dishes.create({ ...createDishInput, store }),
           );
           return {
             ok: true,
@@ -259,6 +261,63 @@ export class StoreService{
           return {
             ok: false,
             error: 'Could not create dish',
+          };
+        }
+      }
+
+      async editDish(owner: User, editDishInput: EditDishInput):Promise<EditDishOutput>{
+        try{
+          const dish = await this.dishes.findOne(editDishInput.dishId, {relations: ['store']})
+          if(!dish){
+            return{
+              ok: false,
+              error: 'Dish not found'
+            }
+          }
+          if(dish.store.ownerId !== owner.id){
+            return{
+              ok: false,
+              error: "You can't do that"
+            };
+          }
+          await this.dishes.save([{
+            id: editDishInput.dishId,
+            ...editDishInput
+          }])
+          return{
+            ok: true
+          }
+        }catch(error){
+          return{
+            ok: false,
+            error: 'Could not edit dish'
+          };
+        }
+      }
+
+      async deleteDish(owner: User, {dishId}: DeleteDishInput):Promise<DeleteDishOutput>{
+        try{
+          const dish = await this.dishes.findOne(dishId, {relations: ['store']})
+        if(!dish){
+          return{
+            ok: false,
+            error: 'Dish not found'
+          }
+        };
+        if(dish.store.ownerId !== owner.id){
+          return{
+            ok: false,
+            error: "You can't do that"
+          };
+        }
+        await this.dishes.delete(dishId)
+        return{
+          ok: true
+        }
+        }catch(error){
+          return{
+            ok: false,
+            error: 'Could not delete dish'
           };
         }
       }

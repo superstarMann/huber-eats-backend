@@ -19,6 +19,8 @@ import { Category } from './stores/entities/category.entity';
 import { StoresModule } from './stores/stores.module';
 import { AuthModule } from './auth/auth.module';
 import { Dish } from './stores/entities/dish.entity';
+import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
 
 @Module({
   imports: [
@@ -50,7 +52,7 @@ import { Dish } from './stores/entities/dish.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [User, Verification, Store, Category, Dish],
+      entities: [User, Verification, Store, Category, Dish, Order],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -67,6 +69,7 @@ import { Dish } from './stores/entities/dish.entity';
     UsersModule,
     StoresModule,
     AuthModule,
+    OrdersModule,
 
   ],
   controllers: [],

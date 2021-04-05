@@ -13,15 +13,20 @@ class DishChoice {
   extra?: number;
 }
 
+
 @InputType('DishOptionInputType', { isAbstract: true })
 @ObjectType()
 class DishOption {
+
   @Field(type => String)
   name: string;
+
   @Field(type => [DishChoice], { nullable: true })
   choices?: DishChoice[];
+
   @Field(type => Int, { nullable: true })
   extra?: number;
+  
 }
 
 @InputType('DishInputType', { isAbstract: true })
