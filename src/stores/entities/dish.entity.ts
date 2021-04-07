@@ -6,17 +6,16 @@ import { Store } from "./store.entity";
 
 @InputType('DishChoiceInputType', { isAbstract: true })
 @ObjectType()
-class DishChoice {
+export class DishChoice {
   @Field(type => String)
   name: string;
   @Field(type => Int, { nullable: true })
   extra?: number;
 }
 
-
 @InputType('DishOptionInputType', { isAbstract: true })
 @ObjectType()
-class DishOption {
+export class DishOption {
 
   @Field(type => String)
   name: string;
