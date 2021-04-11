@@ -4,12 +4,13 @@ import { CoreEntity } from "src/common/entities/core.entity";
 import { Dish } from "src/stores/entities/dish.entity";
 import { Store } from "src/stores/entities/store.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, RelationId } from "typeorm";
 import { OrderItem } from "./order-item.entity";
 
 export enum OrderStatus{
     Pending = 'Pending', //대기
-    Cooking = 'Cooking', //요리
+    Cooking = 'Cooking', //요리중
+    Cooked = 'Cooked', // 요리됨
     PickedUp = 'PickedUp', //받음
     Delivered = 'Delivered', // 배달
 }
@@ -25,9 +26,15 @@ export class Order extends CoreEntity{
     @ManyToOne(type => User, user => user.orders, {onDelete: 'SET NULL', nullable: true})
     customer?: User
 
+    @RelationId((order: Order) => order.customer)
+    customerId: number;
+
     @Field(() => User, {nullable: true})
     @ManyToOne(type => User, user => user.rides, {onDelete: 'SET NULL', nullable: true})
     driver?: User
+
+    @RelationId((order: Order) => order.driver)
+    driverId: number;
 
     @Field(() => Store)
     @ManyToOne(type => Store, store => store.orders, {onDelete: 'SET NULL', nullable: true})
