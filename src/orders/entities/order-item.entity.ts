@@ -6,13 +6,10 @@ import { Column, Entity, ManyToOne } from "typeorm";
 @InputType('OrderItemOptionInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItemOption {
-
   @Field(type => String)
   name: string;
-
   @Field(type => String, { nullable: true })
-  choice?: String;
-
+  choice: String;
 }
 
 
@@ -20,7 +17,7 @@ export class OrderItemOption {
 @ObjectType()
 @Entity()
 export class OrderItem extends CoreEntity{
-
+    @Field()
     @ManyToOne(() => Dish, {nullable: true, onDelete: 'CASCADE'})
     dish: Dish;
 

@@ -22,6 +22,7 @@ import { Dish } from './stores/entities/dish.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -59,11 +60,10 @@ import { OrderItem } from './orders/entities/order-item.entity';
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       context: ({ req, connection }) => {
-        if (req) {
-          return { user: req['user'] };
-        } else {
-          console.log(connection);
-        }
+        const TOKEN_KEY = 'x-jwt';
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+        };
       },
     }),
     JwtModule.forRoot({
@@ -77,8 +77,8 @@ import { OrderItem } from './orders/entities/order-item.entity';
     UsersModule,
     StoresModule,
     AuthModule,
-    OrdersModule
-
+    OrdersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

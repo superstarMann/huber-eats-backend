@@ -4,14 +4,12 @@ import { OrderItemOption } from "../entities/order-item.entity";
 
 
 @InputType()
-class CreateOrderitemInput{
+class CreateOrderItemInput {
+  @Field(type => Int)
+  dishId: number;
 
-    @Field(() => Int)
-    dishId: number;
-
-    @Field(() => [OrderItemOption], {nullable: true})
-    options?: OrderItemOption[];
-
+  @Field(type => [OrderItemOption], { nullable: true })
+  options?: OrderItemOption[];
 }
 
 @InputType()
@@ -19,10 +17,9 @@ export class CreatOrderInput {
     @Field(() => Int)
     storeId: number;
 
-    @Field(() => [CreateOrderitemInput])
-    items: CreateOrderitemInput[];
-    
-}
+    @Field(type => [CreateOrderItemInput])
+    items: CreateOrderItemInput[];
+  }
 
 @ObjectType()
 export class CreateOrderOutput extends CoreOutput{}

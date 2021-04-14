@@ -29,3 +29,10 @@ The Backend of Nuber Eats Clone
 - Create Dish
 - Edit Dish
 - Delete Dish
+
+- Orders Subscription: 
+ - Pending Orders (s: newOrder) (t: createOrder(newOrder))
+ - Order Status (Customer, Delivery, Owner) (s: orderUpdate) (t: editOrder (orderUpdate))
+ - Pending Pickup ORder (Delivery) (s: orderUpdate) (t: editOrder (orderUpdate))
+
+-Payments (CRON)
