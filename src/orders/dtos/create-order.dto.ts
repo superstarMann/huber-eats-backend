@@ -13,13 +13,13 @@ class CreateOrderItemInput {
 }
 
 @InputType()
-export class CreatOrderInput {
+export class CreateOrderInput {
     @Field(() => Int)
     storeId: number;
 
     @Field(type => [CreateOrderItemInput])
-    items: CreateOrderItemInput[];
-  }
+  items: CreateOrderItemInput[];
+}
 
 @ObjectType()
 export class CreateOrderOutput extends CoreOutput{}

@@ -49,4 +49,7 @@ export class Store extends CoreEntity {
     @Field(() => [Dish])
     @OneToMany(() => Dish, dish => dish.store)
     menu: Dish[];
+
+    
+
 }

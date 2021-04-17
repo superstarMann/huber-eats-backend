@@ -23,25 +23,25 @@ registerEnumType(OrderStatus, {name: 'OrderStatus'} )
 export class Order extends CoreEntity{
     
     @Field(type => User, {nullable: true})
-    @ManyToOne(type => User, user => user.orders, {onDelete: 'SET NULL', nullable: true})
+    @ManyToOne(type => User, user => user.orders, {onDelete: 'SET NULL', nullable: true, eager: true})
     customer?: User
 
     @RelationId((order: Order) => order.customer)
     customerId: number;
 
     @Field(() => User, {nullable: true})
-    @ManyToOne(type => User, user => user.rides, {onDelete: 'SET NULL', nullable: true})
+    @ManyToOne(type => User, user => user.rides, {onDelete: 'SET NULL', nullable: true, eager: true})
     driver?: User
 
     @RelationId((order: Order) => order.driver)
     driverId: number;
 
     @Field(() => Store)
-    @ManyToOne(type => Store, store => store.orders, {onDelete: 'SET NULL', nullable: true})
+    @ManyToOne(type => Store, store => store.orders, {onDelete: 'SET NULL', nullable: true, eager: true})
     store: Store
 
     @Field(() => [OrderItem])
-    @ManyToMany(() => OrderItem)
+    @ManyToMany(() => OrderItem, {eager: true})
     @JoinTable()
     items: OrderItem[];
 
