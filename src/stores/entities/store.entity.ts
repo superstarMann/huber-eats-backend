@@ -50,6 +50,11 @@ export class Store extends CoreEntity {
     @OneToMany(() => Dish, dish => dish.store)
     menu: Dish[];
 
-    
+    @Field(() => Boolean)
+    @Column({default: false})
+    isPromoted: boolean;
 
+    @Field(() => Date, {nullable: true})
+    @Column({nullable: true})
+    promotedUntil: Date
 }

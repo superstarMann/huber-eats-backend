@@ -150,7 +150,13 @@ export class StoreService{
                       error: "Category not found",
                   };
                 }
-                const stores = await this.stores.find({where: {category}, take: 25, skip: (page - 1)*25, });
+                const stores = await this.stores.find({
+                 where: {category},
+                 take: 25,
+                 order:{
+                   isPromoted: 'DESC'
+                 },
+                 skip: (page - 1)*25, });
                 category.stores = stores;
                 const totalResults = await this.countStores(category)
                 return{
@@ -168,7 +174,13 @@ export class StoreService{
 
       async allstores({page} : StoresInput): Promise<StoresOutput>{
           try{
-              const [results, totalResults] = await this.stores.findAndCount({skip:(page - 1 )*25 , take: 25});
+              const [results, totalResults] = await this.stores.findAndCount({
+                skip:(page - 1 )*25 ,
+                take: 25,
+                order: {
+                  isPromoted: 'DESC'
+                }
+              });
               return{
                   ok:true,
                   results,
