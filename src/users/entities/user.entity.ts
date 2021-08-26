@@ -17,15 +17,15 @@ export enum UserRole {
   Client = 'Client',
   Owner = 'Owner',
   Delivery = 'Delivery',
-  }
+}
 
 registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType('UserInputType',{ isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
-  @Column()
+  @Column({ unique: true })
   @Field(type => String)
   @IsEmail()
   email: string;
@@ -50,35 +50,35 @@ export class User extends CoreEntity {
     type => Store,
     store => store.owner,
   )
-  stores : Store[]
+  stores: Store[];
 
   @Field(type => [Order])
   @OneToMany(
     type => Order,
     order => order.customer,
   )
-  orders: Order[]
+  orders: Order[];
+
+  @Field(type => [Payment])
+  @OneToMany(
+    type => Payment,
+    payment => payment.user,
+    { eager: true },
+  )
+  payments: Payment[];
 
   @Field(type => [Order])
   @OneToMany(
     type => Order,
     order => order.driver,
   )
-  rides: Order[]
-
-  @Field(() => [Payment])
-  @OneToMany(
-    () => Payment,
-    payment => payment.user,
-    {eager: true}
-  )
-  payments: Payment[];
+  rides: Order[];
 
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
     if (this.password) {
-      try { 
+      try {
         this.password = await bcrypt.hash(this.password, 10);
       } catch (e) {
         console.log(e);

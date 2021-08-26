@@ -89,6 +89,7 @@ import { UploadsModule } from './uploads/uploads.module';
     OrdersModule,
     CommonModule,
     PaymentsModule,
+    UploadsModule
   ],
   controllers: [],
   providers: [],

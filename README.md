@@ -1,6 +1,9 @@
- # Huber Eats
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
 
-The Backend of Nuber Eats Clone
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
 ## User Entity:
 - id
@@ -19,12 +22,12 @@ The Backend of Nuber Eats Clone
 - Verify Email
 
 - See Categories
-- See Restaurants by Category (pagination)
-- See Restaurants (pagination)
-- See Restaurant
+- See Store by Category (pagination)
+- See Store (pagination)
+- See Store
 
-- Edit Restaurant
-- Delete Restaurant
+- Edit Store
+- Delete Store
 
 - Create Dish
 - Edit Dish

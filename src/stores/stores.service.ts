@@ -10,6 +10,8 @@ import { DeleteDishInput, DeleteDishOutput } from "./dtos/delete-dish.dto";
 import { DeleteStoreInput, DeleteStoreOutput } from "./dtos/delete-store.dto";
 import { EditDishInput, EditDishOutput } from "./dtos/edit-dish.dto";
 import { EditStoreInput, EditStoreOutput } from "./dtos/edit-store.dto";
+import { MyStoreInput, MyStoreOutput } from "./dtos/my-store.dto";
+import { MyStoresOutput } from "./dtos/my-stores.dto";
 import { SearchStoreInput, SearchStoreOutput } from "./dtos/search-store.dto";
 import { StoreInput, StoreOutput } from "./dtos/store.dto";
 import { StoresInput, StoresOutput } from "./dtos/stores.dto";
@@ -51,6 +53,7 @@ export class StoreService{
             await this.stores.save(newStore);
             return{
                 ok: true,
+                storeId: newStore.id
             };
         }catch(error){
             return{
@@ -58,6 +61,24 @@ export class StoreService{
                 error: "Could not create store"
             }            
         }
+    }
+
+    async myStore(
+      owner: User,
+      {id}: MyStoreInput,
+    ): Promise<MyStoreOutput>{
+      try{
+        const store =await this.stores.findOne({owner, id}, {relations: ['menu']});
+        return{
+          store,
+          ok: true
+        }
+      }catch(error){
+        return{
+          ok: false,
+          error: 'Could not find stores'
+        }
+      }
     }
     
     async editStore(owner: User, editStoreInput: EditStoreInput): Promise<EditStoreOutput> {
@@ -175,8 +196,8 @@ export class StoreService{
       async allstores({page} : StoresInput): Promise<StoresOutput>{
           try{
               const [results, totalResults] = await this.stores.findAndCount({
-                skip:(page - 1 )*25 ,
-                take: 25,
+                skip:(page - 1 )* 3 ,
+                take:  3,
                 order: {
                   isPromoted: 'DESC'
                 }
@@ -184,7 +205,7 @@ export class StoreService{
               return{
                   ok:true,
                   results,
-                  totalPages: Math.ceil(totalResults / 25),
+                  totalPages: Math.ceil(totalResults /  3),
                                  
               };
           }catch{
@@ -225,14 +246,14 @@ export class StoreService{
                   where: {
                     name: Raw(name => `${name} ILIKE '%${query}%'`),
                   },
-                  take: 25, 
-                  skip: (page - 1) *25
+                  take: 3, 
+                  skip: (page - 1) *3
               });
               return{
                   ok:true,
                   stores,
                   totalResults,
-                  totalPages: Math.ceil(totalResults / 25),
+                  totalPages: Math.ceil(totalResults / 3),
               }
           }catch(error){
               return{
@@ -331,6 +352,21 @@ export class StoreService{
             ok: false,
             error: 'Could not delete dish'
           };
+        }
+      }
+
+      async myStores(owner: User): Promise<MyStoresOutput>{
+        try{
+          const stores = await this.stores.find({owner});
+          return{
+            stores,
+            ok: true
+          }
+        }catch(error){
+          return{
+            ok: false,
+            error: 'Could not find stores'
+          }
         }
       }
     }

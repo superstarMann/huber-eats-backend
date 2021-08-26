@@ -26,7 +26,7 @@ export class Store extends CoreEntity {
     @Field(()=> String)
     @Column()
     @IsString()
-    adress: string;
+    address: string;
 
     @Field(type => [Order])
     @OneToMany(
@@ -36,7 +36,7 @@ export class Store extends CoreEntity {
     orders: Order[]
 
     @Field(type => Category, {nullable: true})
-    @ManyToOne(type => Category,category => category.stores, {nullable: true, onDelete:'SET NULL'})
+    @ManyToOne(type => Category,category => category.stores, {nullable: true, onDelete:'SET NULL', eager:true})
     category: Category;
 
     @Field(type => User)
